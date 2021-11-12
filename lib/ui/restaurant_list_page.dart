@@ -1,31 +1,61 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:restaurant/model/restaurant.dart';
-import 'package:restaurant/ui/restaurant_row_item.dart';
+import 'package:provider/provider.dart';
+import 'package:restaurant/common/styles.dart';
+import 'package:restaurant/data/api/api_service.dart';
+import 'package:restaurant/data/model/restaurants.dart';
+import 'package:restaurant/provider/restaurant_list_provider.dart';
+import 'package:restaurant/widget/restaurant_row_item.dart';
 
 class RestaurantListTab extends StatelessWidget {
   const RestaurantListTab({Key? key}) : super(key: key);
 
   Widget _buildList(BuildContext context) {
-    return FutureBuilder<String>(
-      future: DefaultAssetBundle.of(context)
-          .loadString('assets/local_restaurant.json'),
-      builder: (context, snapshot) {
-        if (snapshot.hasError) {
-          return Center(
-            child: Text(
-                "Data Tidak berhasil ditampilkan karena terjadi error: ${snapshot.error}"),
-          );
-        } else if (snapshot.hasData) {
-          final List<Restaurant> restaurant =
-              Restaurant.parseRestaurants(snapshot.data);
-          return _buildRestaurantItem(context, restaurant);
-        } else {
+    late RestaurantProvider provider;
+    return ChangeNotifierProvider<RestaurantProvider>(
+      create: (_) => RestaurantProvider(apiService: ApiService(), id: ''),
+      child: Consumer<RestaurantProvider>(builder: (context, state, _) {
+        provider = state;
+        if (state.state == ResultState.loading) {
           return const Center(
             child: CupertinoActivityIndicator(),
           );
+        } else if (state.state == ResultState.hasData) {
+          final List<Restaurant> restaurant = state.result;
+          return _buildRestaurantItem(context, restaurant);
+        } else if (state.state == ResultState.noData) {
+          return Center(child: Text(state.message));
+        } else if (state.state == ResultState.error) {
+          return Center(
+              child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset("assets/images/lost-connection.png", width: 100),
+              const SizedBox(
+                height: 10,
+              ),
+              const Center(
+                  child: Text(
+                "Lost Connection!",
+                style: Styles.restaurantItemDescription,
+              )),
+              const SizedBox(
+                height: 10,
+              ),
+              ElevatedButton(
+                child: const Text("Refresh"),
+                onPressed: () {
+                  provider.listRestaurant();
+                },
+              ),
+            ],
+          ));
+        } else {
+          return const Center(
+            child: Text("Error"),
+          );
         }
-      },
+      }),
     );
   }
 

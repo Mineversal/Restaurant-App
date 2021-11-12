@@ -1,7 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:restaurant/model/restaurant.dart';
+import 'package:restaurant/data/api/api_service.dart';
 import 'package:restaurant/common/styles.dart';
+import 'package:restaurant/data/model/restaurants.dart';
 import 'package:restaurant/ui/restaurant_detail_page.dart';
 
 class RestaurantRowItem extends StatelessWidget {
@@ -39,7 +40,7 @@ class RestaurantRowItem extends StatelessWidget {
                   child: Hero(
                     tag: restaurant.pictureId,
                     child: Image.network(
-                      restaurant.pictureId,
+                      ApiService.imgUrl + restaurant.pictureId,
                       fit: BoxFit.cover,
                       width: 76,
                       height: 76,
@@ -83,7 +84,7 @@ class RestaurantRowItem extends StatelessWidget {
                           const Padding(
                               padding: EdgeInsets.symmetric(horizontal: 2)),
                           Text(
-                            '${restaurant.rating}',
+                            restaurant.rating.toString(),
                             style: Styles.restaurantRowItemPreview,
                           )
                         ],
