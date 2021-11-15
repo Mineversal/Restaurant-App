@@ -5,6 +5,7 @@ import 'package:restaurant/common/styles.dart';
 import 'package:restaurant/data/api/api_service.dart';
 import 'package:restaurant/data/model/restaurants.dart';
 import 'package:restaurant/provider/restaurant_detail_provider.dart';
+import 'package:restaurant/utils/enum.dart';
 import 'package:restaurant/widget/restaurant_detail.dart';
 
 class RestaurantDetailPage extends StatelessWidget {
@@ -57,10 +58,11 @@ class RestaurantDetailPage extends StatelessWidget {
                         ),
                       );
                     } else if (state.state == ResultState.hasData) {
-                      final restaurant = state.result;
+                      final restaurants = state.result;
                       return RestaurantDetail(
-                        restaurant: restaurant,
-                        provider: provider,
+                        restaurant: restaurants,
+                        providers: provider,
+                        restaurants: restaurant,
                       );
                     } else if (state.state == ResultState.noData) {
                       return Center(child: Text(state.message));

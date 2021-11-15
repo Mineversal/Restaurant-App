@@ -38,6 +38,12 @@ dependencies:
   http: ^0.13.4
   provider: ^6.0.1
   get: ^4.3.8
+  sqflite: ^2.0.0+4
+  shared_preferences: ^2.0.8
+  android_alarm_manager: ^2.0.2
+  intl: ^0.17.0
+  flutter_local_notifications: ^9.1.2
+  rxdart: ^0.27.2
 
 dev_dependencies:
   flutter_test:

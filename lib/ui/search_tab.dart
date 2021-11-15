@@ -5,6 +5,7 @@ import 'package:restaurant/common/styles.dart';
 import 'package:restaurant/data/api/api_service.dart';
 import 'package:restaurant/data/model/restaurants.dart';
 import 'package:restaurant/provider/restaurant_list_provider.dart';
+import 'package:restaurant/utils/enum.dart';
 import 'package:restaurant/widget/restaurant_row_item.dart';
 import 'package:restaurant/widget/search_bar.dart';
 

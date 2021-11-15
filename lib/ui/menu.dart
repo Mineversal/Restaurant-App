@@ -3,8 +3,12 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:restaurant/ui/restaurant_favorite_page.dart';
 import 'package:restaurant/ui/restaurant_list_page.dart';
 import 'package:restaurant/ui/search_tab.dart';
+import 'package:restaurant/ui/settings_page.dart';
+
+///import 'package:restaurant/ui/settings_page.dart';
 import 'package:restaurant/widget/platform_widget.dart';
 
 class Menu extends StatefulWidget {
@@ -18,23 +22,29 @@ class Menu extends StatefulWidget {
 class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
   late TabController _controller;
 
-  int _bottomNavIndex = 0;
+  int _bottomNavIndex = 1;
   static const String _home = 'Home';
   static const String _search = 'Search';
+  static const String _favorite = 'Favorite';
 
   final List<Widget> _listWidget = [
-    const RestaurantListTab(),
     const SearchTab(),
+    const RestaurantListTab(),
+    const RestaurantFavoriteTab(),
   ];
 
   final List<BottomNavigationBarItem> _bottomNavBarItems = [
+    BottomNavigationBarItem(
+      icon: Icon(Platform.isIOS ? CupertinoIcons.search : Icons.search),
+      label: _search,
+    ),
     BottomNavigationBarItem(
       icon: Icon(Platform.isIOS ? CupertinoIcons.home : Icons.home),
       label: _home,
     ),
     BottomNavigationBarItem(
-      icon: Icon(Platform.isIOS ? CupertinoIcons.search : Icons.search),
-      label: _search,
+      icon: Icon(Platform.isIOS ? CupertinoIcons.heart : Icons.favorite),
+      label: _favorite,
     ),
   ];
 
@@ -65,9 +75,9 @@ class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
   @override
   void initState() {
     _controller = TabController(
-      length: 2,
+      length: 3,
       vsync: this,
-      initialIndex: 0,
+      initialIndex: 1,
     );
     super.initState();
   }
@@ -87,6 +97,12 @@ class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
   Widget _buildAndroid(BuildContext context) {
     return Scaffold(
       body: _listWidget[_bottomNavIndex],
+      floatingActionButton: FloatingActionButton(
+        child: const Icon(Icons.settings),
+        onPressed: () {
+          Navigator.pushNamed(context, Setting.routeName);
+        },
+      ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _bottomNavIndex,
         items: _bottomNavBarItems,
